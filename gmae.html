@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emoji Movie Quiz</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            overflow: hidden;
+            background-size: 1200px;
+            animation: glitter 10s infinite linear;
+        }
+
+        @keyframes glitter {
+            0% {
+                background-position: 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+
+        #emojiDisplay {
+            font-size: 7em;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #gameContainer {
+            text-align: center;
+            background-color: rgba(194, 194, 126, 0); /* Fully transparent */
+            padding: 5px;
+            border-radius: 50px;
+            box-shadow: 0 0 1px rgba(244, 6, 6, 0.801);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #inputBox {
+            font-size: 3em;
+            padding: 1px;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: red;
+        }
+
+        #score {
+            font-size: 2em;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="emojiDisplay"></div>
+        <input type="text" id="inputBox" placeholder="Guess the movie">
+        <p id="result"></p>
+        <p id="score">Score: 0</p>
+    </div>
+
+    <script>
+       const movieEmojis = [
+    { emoji: '🚢🧊', answer: 'Titanic', backgroundImage: 'titanic.jpeg' },
+    { emoji: '🧙‍♂️📚', answer: 'Harry Potter', backgroundImage: 'harry.jpeg' },
+    { emoji: '🍫🏭', answer: 'Willy Wonka', backgroundImage: 'willy.jpg' },
+    { emoji: '🦁👑', answer: 'The Lion King', backgroundImage: 'lion.jpeg' },
+    { emoji: '🧊❄️🏞', answer: 'Frozen', backgroundImage: 'frozen.jpeg' },
+    { emoji: '👨‍🚀🌌', answer: 'Interstellar', backgroundImage: 'interstellar.avif' },
+    { emoji: '🍔🍟🤖', answer: 'Wall-E', backgroundImage: 'walle.jpeg' },
+    { emoji: '🧙‍♂️🌌', answer: 'Stardust', backgroundImage: 'stardust.jpg' },
+    { emoji: '🦖🌋', answer: 'Jurassic Park', backgroundImage: 'jurrassic.jpeg' },
+    { emoji: '🎬🦁', answer: 'The Jungle Book', backgroundImage: 'jungle.jpeg' },
+    { emoji: '🧚‍♂️🍄', answer: 'Alice in Wonderland', backgroundImage: 'alic.jpeg' },
+    { emoji: '💀🏍️🔥', answer: 'Ghostrider', backgroundImage: 'gosht.jpg' },
+    { emoji: '👠👸🤴', answers:  'Cindrella', backgroundImage: 'cinderella.jpeg' },
+    { emoji: '👑🦍', answers:  'Kong: Skull Island', backgroundImage: 'kong.jpeg' },
+    { emoji: '🚄🧟‍♂🧟‍♀️', answers: 'Train to Busan', backgroundImage: 'train.webp' },
+    // ... (other movie emojis)
+];
+
+
+        let currentMovieIndex = 0;
+        let score = 0;
+
+        function displayNextMovieEmoji() {
+            const emojiDisplay = document.getElementById('emojiDisplay');
+            emojiDisplay.textContent = movieEmojis[currentMovieIndex].emoji;
+
+            // Update background image for each question
+            document.body.style.backgroundImage = `url(${movieEmojis[currentMovieIndex].backgroundImage})`;
+
+            // Reset index to 0 if it reaches the end of the array
+            currentMovieIndex = (currentMovieIndex + 1) % movieEmojis.length;
+        }
+
+        function startGame() {
+            displayNextMovieEmoji();
+            document.getElementById('inputBox').addEventListener('keydown', checkInput);
+        }
+
+        function checkInput(event) {
+            const inputBox = document.getElementById('inputBox');
+            const inputText = inputBox.value.trim().toLowerCase();
+            const correctAnswer = movieEmojis[currentMovieIndex].answer.toLowerCase();
+
+            if (event.key === 'Enter') {
+                // Check if the answer is correct
+                if (inputText === correctAnswer) {
+                    // Correct guess
+                    document.getElementById('result').textContent = 'Correct! 🎉';
+                    score++;
+                    updateScore();
+
+                    // Set background image for 3 seconds
+                    const emojiDisplay = document.getElementById('emojiDisplay');
+                    emojiDisplay.style.backgroundImage = `url(${movieEmojis[currentMovieIndex].backgroundImage})`;
+                    setTimeout(() => {
+                        emojiDisplay.style.backgroundImage = ''; // Clear background image
+                        document.getElementById('result').textContent = '';
+                        inputBox.value = ''; // Clear input
+                        displayNextMovieEmoji();
+                    }, 3000);
+                } else {
+                    // Wrong Answer
+                    document.getElementById('result').textContent = 'Wrong Answer 😞';
+                    setTimeout(() => {
+                        document.getElementById('result').textContent = '';
+                        inputBox.value = ''; // Clear input
+                        displayNextMovieEmoji();
+                    }, 3000);
+                }
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = 'Score: ' + score;
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
+
+
+
